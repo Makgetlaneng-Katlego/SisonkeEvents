@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_gray">#1E1E1E</color>
+    <color name="light_gray">#7A7A7A</color>
+    <color name="silver">#C0C0C0</color>"
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="Light_Lavender">#F2EBFA</color>
+    <color name="arrow_color">#4DD532FD</color>
+    <color name="deep_purple">#4A2C83</color>
+    <color name="red">#F80000</color>
+</resources>

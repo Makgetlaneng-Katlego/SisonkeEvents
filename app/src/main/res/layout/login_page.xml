@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Welcome back"
+            android:textColor="@color/dark_gray"
+            android:textSize="45sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Login to keep track of your events"
+            android:textColor="@color/light_gray"
+            android:textSize="15dp" />
+        <!-- User will be prompted to enter email-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="Email"
+            android:textColor="@color/light_gray" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/account_input_background"
+            android:padding="10dp"
+            android:text="example@email.com"
+            android:textColor="@color/light_gray" />
+        <!-- User prompted to enter password-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/account_input_background"
+            android:padding="10dp"
+            android:text="******"
+            android:textColor="@color/light_gray" />
+        <!-- login button-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/loginbtn_background"
+            android:text="Login"
+            android:textColor="@color/white" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginBottom="20dp"
+                android:layout_toEndOf="@id/line1"
+                android:text="or"
+                android:textColor="@color/light_gray"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/line1"
+                android:layout_width="155dp"
+                android:layout_centerVertical="true"
+                android:layout_height="2dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="2dp"
+                android:background="@color/silver" />
+
+            <TextView
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/line2"
+                android:background="@color/silver"
+                android:layout_width="155dp"
+                android:layout_height="2dp"/>
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/createbtn"
+            android:text="Create account" />
+    </LinearLayout>
+</LinearLayout>
