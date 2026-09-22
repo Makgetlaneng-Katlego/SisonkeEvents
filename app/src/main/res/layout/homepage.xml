@@ -1,71 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_marginTop="45dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_marginHorizontal="15dp"
-    android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Good Morning,"
-            android:textSize="15sp"
-            android:layout_alignParentTop="true"
-            android:id="@+id/greetingTextView"
-            android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name Placeholder"
-            android:textSize="15sp"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@id/greetingTextView"
-            android:textColor="@color/black"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/notifcation_icon"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/notificaltion_icon"
-            />
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-             android:layout_toStartOf="@id/notificaltion_icon"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/nigthmodelic"/>
-    </RelativeLayout>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/searchbackground"
-        android:paddingLeft="10dp"
-        android:drawableStart="@drawable/search_icon"
-        android:text="Search Events"
-        android:textColor="#7A7A7A"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event categories"
-        android:textColor="@color/dark_gray"/>
-<!--- This is where the categories of the event will be displayed-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="What happeing this weeked"
-        android:textColor="@color/dark_gray"/>
-    <!-- This where the weekend events will be here will be displayed-->
-    <TextView
-        android:textColor="@color/dark_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nearby Events"
-        />
-<!-- This where the nearby events will be displayed here -->
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-</LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNavigationContainer"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="45dp"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="15dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_alignParentStart="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Good Morning,"
+                    android:textSize="15sp"
+                    android:layout_alignParentTop="true"
+                    android:id="@+id/greetingTextView"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/homepageName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name Placeholder"
+                    android:textSize="15sp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/greetingTextView"
+                    android:textColor="@color/black"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/notifcation_icon"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/notificaltion_icon"
+                    />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_toStartOf="@id/notificaltion_icon"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/nigthmodelic"/>
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/searchbackground"
+                android:paddingLeft="10dp"
+                android:drawableStart="@drawable/search_icon"
+                android:text="Search Events"
+                android:textColor="#7A7A7A"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What happening this weekend"
+                android:textColor="@color/dark_gray"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/weekendRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
+                android:textColor="@color/dark_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nearby Events"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nearbyRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/bottomNavigationContainer"
+        layout="@layout/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

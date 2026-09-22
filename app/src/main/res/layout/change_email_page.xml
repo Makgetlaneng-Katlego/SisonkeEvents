@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp">
+
+                <ImageView
+                    android:id="@+id/btnChangeEmailBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/profile_arrow"
+                    android:rotation="180"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="Back"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Change Email"
+                    android:textColor="@color/dark_gray"
+                    android:layout_centerInParent="true"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enter your new email address below to update your account access configurations."
+                android:textColor="@color/light_gray"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Email Address"
+                android:textColor="#7A7A7A"
+                android:textSize="14sp"
+                android:layout_marginBottom="6dp"/>
+
+            <EditText
+                android:id="@+id/etNewEmailInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingHorizontal="12dp"
+                android:hint="you@example.com"
+                android:textColorHint="#BFBFBF"
+                android:inputType="textEmailAddress"
+                android:textSize="15sp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/account_input_background"/>
+
+
+            <Button
+                android:id="@+id/btnUpdateEmailSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:background="@drawable/loginbtn_background"
+                android:text="Update Email"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

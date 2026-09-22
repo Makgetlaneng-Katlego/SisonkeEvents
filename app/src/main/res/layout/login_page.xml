@@ -28,7 +28,7 @@
             android:text="Login to keep track of your events"
             android:textColor="@color/light_gray"
             android:textSize="15dp" />
-        <!-- User will be prompted to enter email-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,27 +37,29 @@
             android:textColor="@color/light_gray" />
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/account_input_background"
             android:padding="10dp"
             android:text="example@email.com"
             android:textColor="@color/light_gray" />
-        <!-- User prompted to enter password-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Password" />
 
         <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/account_input_background"
             android:padding="10dp"
             android:text="******"
             android:textColor="@color/light_gray" />
-        <!-- login button-->
+
         <Button
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -101,6 +103,7 @@
         </RelativeLayout>
 
         <Button
+            android:id="@+id/btnCreateAcc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
