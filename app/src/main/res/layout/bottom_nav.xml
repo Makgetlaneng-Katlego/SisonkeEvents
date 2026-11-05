@@ -21,11 +21,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_home"
-            android:contentDescription="Home"/>
+            android:contentDescription="@string/cd_home"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
+            android:text="@string/nav_home"
             android:textSize="10sp"
             android:textColor="@color/light_gray"/>
     </LinearLayout>
@@ -43,11 +43,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/search_icon"
-            android:contentDescription="Explore"/>
+            android:contentDescription="@string/cd_explore"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Explore"
+            android:text="@string/nav_explore"
             android:textSize="10sp"
             android:textColor="@color/light_gray"/>
     </LinearLayout>
@@ -65,11 +65,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_heart"
-            android:contentDescription="My Events"/>
+            android:contentDescription="@string/cd_my_events"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Events"
+            android:text="@string/nav_my_events"
             android:textSize="10sp"
             android:textColor="@color/light_gray"/>
     </LinearLayout>
@@ -87,11 +87,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_notification"
-            android:contentDescription="Notifications"/>
+            android:contentDescription="@string/cd_notifications"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notifications"
+            android:text="@string/nav_notifications"
             android:textSize="10sp"
             android:textColor="@color/light_gray"/>
     </LinearLayout>
@@ -109,11 +109,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/acount_image"
-            android:contentDescription="Profile"/>
+            android:contentDescription="@string/cd_profile"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
+            android:text="@string/nav_profile"
             android:textSize="10sp"
             android:textColor="@color/light_gray"/>
     </LinearLayout>

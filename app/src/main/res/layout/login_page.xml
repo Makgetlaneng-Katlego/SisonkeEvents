@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="Welcome back"
+            android:text="@string/title_welcome_back"
             android:textColor="@color/dark_gray"
             android:textSize="45sp"
             android:textStyle="bold" />
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="Login to keep track of your events"
+            android:text="@string/subtitle_login"
             android:textColor="@color/light_gray"
             android:textSize="15dp" />
 
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:text="Email"
+            android:text="@string/label_email"
             android:textColor="@color/light_gray" />
 
         <EditText
@@ -42,12 +42,13 @@
             android:layout_height="45dp"
             android:background="@drawable/account_input_background"
             android:padding="10dp"
-            android:text="example@email.com"
+            android:hint="@string/hint_email_example"
             android:textColor="@color/light_gray" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Password" />
+            android:text="@string/label_password" />
 
         <EditText
             android:id="@+id/password"
@@ -55,7 +56,7 @@
             android:layout_height="45dp"
             android:background="@drawable/account_input_background"
             android:padding="10dp"
-            android:text="******"
+            android:hint="@string/hint_password_mask"
             android:textColor="@color/light_gray" />
 
         <Button
@@ -65,7 +66,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginVertical="20dp"
             android:background="@drawable/loginbtn_background"
-            android:text="Login"
+            android:text="@string/btn_login"
             android:textColor="@color/white" />
 
         <RelativeLayout
@@ -80,7 +81,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginBottom="20dp"
                 android:layout_toEndOf="@id/line1"
-                android:text="or"
+                android:text="@string/divider_or"
                 android:textColor="@color/light_gray"
                 android:textSize="20sp" />
 
@@ -108,6 +109,6 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/createbtn"
-            android:text="Create account" />
+            android:text="@string/btn_create_account" />
     </LinearLayout>
 </LinearLayout>

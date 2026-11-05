@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -25,7 +26,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Good Morning,"
+                    android:text="@string/greeting_morning"
                     android:textSize="15sp"
                     android:layout_alignParentTop="true"
                     android:id="@+id/greetingTextView"
@@ -34,11 +35,11 @@
                     android:id="@+id/homepageName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name Placeholder"
                     android:textSize="15sp"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@id/greetingTextView"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    tools:text="Name Placeholder"/>
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -60,15 +61,15 @@
                 android:background="@drawable/searchbackground"
                 android:paddingLeft="10dp"
                 android:drawableStart="@drawable/search_icon"
-                android:text="Search Events"
-                android:textColor="#7A7A7A"
+                android:hint="@string/hint_search_events"
+                android:textColorHint="#7A7A7A"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="What happening this weekend"
+                android:text="@string/header_weekend"
                 android:textColor="@color/dark_gray"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -86,7 +87,7 @@
                 android:textColor="@color/dark_gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nearby Events"
+                android:text="@string/header_nearby"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"

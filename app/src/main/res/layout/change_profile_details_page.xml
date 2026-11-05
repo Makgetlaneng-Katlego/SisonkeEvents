@@ -30,34 +30,32 @@
                     android:rotation="180"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:contentDescription="Back"
+                    android:contentDescription="@string/cd_back"
                     android:clickable="true"
                     android:focusable="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Change Profile Info"
+                    android:text="@string/title_change_profile"
                     android:textColor="@color/dark_gray"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
                     android:textSize="20sp" />
             </RelativeLayout>
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update your primary account details below."
+                android:text="@string/desc_change_profile"
                 android:textColor="@color/light_gray"
                 android:textSize="14sp"
                 android:layout_marginBottom="24dp"/>
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="First Name"
+                android:text="@string/label_first_name"
                 android:textColor="#7A7A7A"
                 android:textSize="14sp"
                 android:layout_marginBottom="6dp"/>
@@ -67,18 +65,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:paddingHorizontal="12dp"
-                android:hint="First Name"
+                android:hint="@string/hint_first_name"
                 android:textColorHint="#BFBFBF"
                 android:inputType="textPersonName"
                 android:textSize="15sp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/account_input_background"/>
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Name"
+                android:text="@string/label_last_name"
                 android:textColor="#7A7A7A"
                 android:textSize="14sp"
                 android:layout_marginBottom="6dp"/>
@@ -88,18 +85,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:paddingHorizontal="12dp"
-                android:hint="Last Name"
+                android:hint="@string/hint_last_name"
                 android:textColorHint="#BFBFBF"
                 android:inputType="textPersonName"
                 android:textSize="15sp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/account_input_background"/>
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone Number"
+                android:text="@string/label_phone_number"
                 android:textColor="#7A7A7A"
                 android:textSize="14sp"
                 android:layout_marginBottom="6dp"/>
@@ -109,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:paddingHorizontal="12dp"
-                android:hint="Phone Number"
+                android:hint="@string/hint_phone_number"
                 android:textColorHint="#BFBFBF"
                 android:inputType="phone"
                 android:textSize="15sp"
@@ -121,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:background="@drawable/loginbtn_background"
-                android:text="Update Profile Info"
+                android:text="@string/btn_update_profile"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"

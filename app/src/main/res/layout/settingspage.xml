@@ -31,12 +31,12 @@
                     android:src="@drawable/profile_arrow"
                     android:rotation="180"
                     android:layout_centerVertical="true"
-                    android:contentDescription="Back" />
+                    android:contentDescription="@string/cd_back" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Settings"
+                    android:text="@string/title_settings"
                     android:layout_centerInParent="true"
                     android:textColor="@color/dark_gray"
                     android:textSize="20sp"
@@ -53,7 +53,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ACCOUNT"
+                android:text="@string/section_account"
                 android:textColor="@color/light_gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -69,7 +69,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Profile"
+                    android:text="@string/menu_profile"
                     android:textColor="@color/dark_gray"
                     android:textSize="16sp"
                     android:layout_centerVertical="true" />
@@ -95,7 +95,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Password"
+                    android:text="@string/menu_password"
                     android:textColor="@color/dark_gray"
                     android:textSize="16sp"
                     android:layout_centerVertical="true" />
@@ -121,7 +121,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="@string/menu_email"
                     android:textColor="@color/dark_gray"
                     android:textSize="16sp"
                     android:layout_centerVertical="true" />
@@ -142,7 +142,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="APPEARANCE"
+                android:text="@string/section_appearance"
                 android:textColor="@color/light_gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -156,7 +156,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dark Mode"
+                    android:text="@string/menu_dark_mode"
                     android:textColor="@color/dark_gray"
                     android:textSize="16sp"
                     android:layout_centerVertical="true" />
@@ -170,11 +170,61 @@
                     android:trackTint="#D1C4E9" />
             </RelativeLayout>
 
+            <!-- LANGUAGE Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/silver"
+                android:layout_marginTop="4dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_language"
+                android:textColor="@color/light_gray"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp" />
 
+            <RelativeLayout
+                android:id="@+id/itemLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:focusable="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_language"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="16sp"
+                    android:layout_centerVertical="true" />
+                <TextView
+                    android:id="@+id/tvCurrentLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/light_gray"
+                    android:textSize="16sp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="28dp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/profile_arrow"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/silver" />
 
         </LinearLayout>
     </ScrollView>
+
     <include
         android:id="@+id/bottomNavigationContainer"
         layout="@layout/bottom_nav"

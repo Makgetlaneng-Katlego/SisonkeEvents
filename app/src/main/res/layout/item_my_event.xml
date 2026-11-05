@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_calendar"
-            android:contentDescription="Event Icon" />
+            android:contentDescription="@string/cd_event_icon" />
     </FrameLayout>
 
     <LinearLayout
@@ -37,10 +38,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Event Name"
                 android:textColor="@color/dark_gray"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Event Name" />
 
             <ImageView
                 android:id="@+id/myEventHeart"
@@ -48,7 +49,7 @@
                 android:layout_height="20dp"
                 android:src="@drawable/ic_heart"
                 android:layout_marginStart="8dp"
-                android:contentDescription="Interested" />
+                android:contentDescription="@string/cd_interested" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,37 +63,37 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_calendar_small"
-                android:contentDescription="Date" />
+                android:contentDescription="@string/cd_date" />
 
             <TextView
                 android:id="@+id/myEventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="12 Sept"
                 android:textColor="@color/light_gray"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="12 Sept" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" · "
+                android:text="@string/separator_dot"
                 android:textColor="@color/light_gray" />
 
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_location"
-                android:contentDescription="Location" />
+                android:contentDescription="@string/cd_location" />
 
             <TextView
                 android:id="@+id/myEventLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="Pretoria"
                 android:textColor="@color/light_gray"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="Pretoria" />
         </LinearLayout>
 
     </LinearLayout>

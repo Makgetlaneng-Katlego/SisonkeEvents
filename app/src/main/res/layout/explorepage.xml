@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Discover page"
+                android:text="@string/title_discover"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/dark_gray"
                 android:textStyle="bold"/>
@@ -51,7 +51,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/musicImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Music" />
+                            android:text="@string/category_music" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -67,13 +67,12 @@
                             android:layout_height="99dp"
                             android:src="@drawable/comedy" />
 
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/comedyImage"
                             android:layout_centerHorizontal="true"
-                            android:text="comedy" />
+                            android:text="@string/category_comedy" />
                     </RelativeLayout>
 
                 </TableRow>
@@ -101,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/sportsImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Sports" />
+                            android:text="@string/category_sports" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -122,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/foodImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Food and Drinks" />
+                            android:text="@string/category_food_drinks" />
                     </RelativeLayout>
 
                 </TableRow>
@@ -134,7 +133,6 @@
                     <RelativeLayout
                         android:id="@+id/educationCategory"
                         android:layout_width="175dp"
-
                         android:layout_height="120dp"
                         android:layout_column="0"
                         android:layout_marginEnd="15dp"
@@ -151,7 +149,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/educationImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Education" />
+                            android:text="@string/category_education" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -172,7 +170,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/familyImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Family Events" />
+                            android:text="@string/category_family" />
                     </RelativeLayout>
 
                 </TableRow>
@@ -200,7 +198,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/communityImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Community Events" />
+                            android:text="@string/category_community" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -221,7 +219,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/festivalImage"
                             android:layout_centerHorizontal="true"
-                            android:text="Festival Events" />
+                            android:text="@string/category_festival" />
                     </RelativeLayout>
 
                 </TableRow>
