@@ -12,7 +12,7 @@ class OfflineDatabaseHelper(context: Context) :
 
     companion object {
         private const val DB_NAME = "sisonke_offline.db"
-        private const val DB_VERSION = 3 // Bumped to 3 for Auth Provider
+        private const val DB_VERSION = 4 // Bumped for SSO schema fix
 
         @Volatile private var INSTANCE: OfflineDatabaseHelper? = null
 
@@ -100,6 +100,38 @@ class OfflineDatabaseHelper(context: Context) :
             )
             """.trimIndent()
         )
+
+        // SSO identity link table.
+        // - No FK CASCADE: user_account is a single-row table that is
+        //   INSERT OR REPLACE'd on every profile update; cascading would
+        //   wipe all Google links on every save.
+        // - created_at added so inserts succeed.
+        db.execSQL(
+            """
+            CREATE TABLE user_identities (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                local_user_id    INTEGER NOT NULL,
+                provider         TEXT NOT NULL,
+                provider_user_id TEXT NOT NULL,
+                email            TEXT,
+                display_name     TEXT,
+                created_at       INTEGER NOT NULL DEFAULT 0,
+                UNIQUE(provider, provider_user_id)
+            )
+            """.trimIndent()
+        )
+
+        db.execSQL(
+            """
+            CREATE TABLE auth_sessions (
+                id                INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_identity_id  INTEGER NOT NULL,
+                auth_state_json   TEXT NOT NULL,
+                updated_at        INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+
         db.execSQL(
             """
             CREATE TABLE session (
@@ -130,6 +162,8 @@ class OfflineDatabaseHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS auth_sessions")
+        db.execSQL("DROP TABLE IF EXISTS user_identities")
         db.execSQL("DROP TABLE IF EXISTS pending_actions")
         db.execSQL("DROP TABLE IF EXISTS category_event_ref")
         db.execSQL("DROP TABLE IF EXISTS category_cache")

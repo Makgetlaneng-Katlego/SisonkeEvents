@@ -24,6 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sisonkeevents.data.EventRepository
 import com.example.sisonkeevents.data.EventsResult
 import com.example.sisonkeevents.data.OfflineDatabaseHelper
+import com.example.sisonkeevents.sso.GoogleSignInManager
+import com.example.sisonkeevents.sso.GoogleSignInResult
+import com.example.sisonkeevents.sso.SSOConfig
+import com.example.sisonkeevents.sso.SSODataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +46,9 @@ class MainActivity : AppCompatActivity() {
             ?: EventRepository(applicationContext, com.example.sisonkeevents.data.TicketMasterEventApi())
     }
 
+    // Google SSO manager (initialized in onCreate)
+    private lateinit var googleSignInManager: GoogleSignInManager
+
     private var currentCategoryName: String? = null
     private var currentCategoryId: String? = null
     private var currentPage: String = "login"
@@ -49,6 +56,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Initialize Google SSO manager
+        googleSignInManager = GoogleSignInManager(this)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -149,6 +159,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnCreateAcc).setOnClickListener { showCreateAccountPage() }
+
+        // Google Sign-In button (safe call: no-op if layout doesn't define it)
+        findViewById<Button>(R.id.btnGoogleSignIn)?.setOnClickListener {
+            startGoogleSignIn()
+        }
     }
 
     fun showCreateAccountPage() {
@@ -184,6 +199,129 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ------------------------------------------------------------------ GOOGLE SSO
+
+    private fun startGoogleSignIn() {
+        lifecycleScope.launch {
+            when (val result = googleSignInManager.signIn()) {
+                is GoogleSignInResult.Success -> {
+                    onGoogleSignInSuccess(
+                        email = result.profile.email,
+                        displayName = result.profile.displayName,
+                        subject = result.profile.subject
+                    )
+                }
+                is GoogleSignInResult.Error -> {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Google sign-in failed: ${result.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    /**
+     * Completes a Google sign-in:
+     *
+     *   1. Look up an existing link by Google `sub` (stable across email
+     *      changes). Fall back to email match for the "local signup, then
+     *      Google with same email" case.
+     *   2. If linked → refresh profile fields, leave authProvider alone.
+     *      If new    → create the single user_account row with
+     *                  authProvider = "GOOGLE" and a throwaway password.
+     *   3. Upsert the (provider, sub) identity row.
+     *   4. Only on full success: set the logged-in flag and navigate home.
+     *
+     * All SQLite work happens on Dispatchers.IO.
+     */
+    private fun onGoogleSignInSuccess(
+        email: String?,
+        displayName: String?,
+        subject: String
+    ) {
+        val emailSafe = email ?: run {
+            Toast.makeText(this, "Google did not return an email", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val safeName = displayName ?: emailSafe.substringBefore("@")
+        val parts = safeName.split(" ", limit = 2)
+        val firstName = parts.getOrNull(0) ?: ""
+        val lastName = parts.getOrNull(1) ?: ""
+
+        lifecycleScope.launch {
+            val dataStore = SSODataStore()
+
+            val localUserId: Long? = withContext(Dispatchers.IO) {
+                // Prefer the stable (provider, sub) link. Fall back to email
+                // so an existing local account with the same email is reused.
+                val linkedId = dataStore.findLinkedUserAccountId(subject)
+                    ?: dataStore.findUserAccountIdByEmail(emailSafe)
+
+                if (linkedId != null) {
+                    // Returning user — sync profile fields, keep authProvider
+                    user.updateEmail(emailSafe)
+                    user.updateProfileDetails(firstName, lastName, user.PhoneNumber ?: "")
+                    linkedId
+                } else {
+                    // New Google user — random throwaway password; user can
+                    // replace it later via Settings → Change password (which
+                    // flips authProvider back to "LOCAL").
+                    user.updateUserDetails(
+                        firstName,
+                        lastName,
+                        emailSafe,
+                        "",
+                        generateRandomPassword(),
+                        "GOOGLE"
+                    )
+                    dataStore.findUserAccountIdByEmail(emailSafe)
+                }
+            }
+
+            if (localUserId == null) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Could not create local account for Google user.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@launch
+            }
+
+            val linked = withContext(Dispatchers.IO) {
+                dataStore.linkOrUpdateIdentity(
+                    subject = subject,
+                    email = emailSafe,
+                    displayName = safeName,
+                    localUserId = localUserId
+                )
+            }
+            if (!linked) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Could not link Google account to local profile.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@launch
+            }
+
+            OfflineDatabaseHelper.get().setLoggedIn(true)
+            Toast.makeText(this@MainActivity, "Welcome, $safeName!", Toast.LENGTH_SHORT).show()
+            // showHomePage() persists navigation state itself.
+            showHomePage()
+        }
+    }
+
+    private fun generateRandomPassword(): String {
+        val bytes = ByteArray(24)
+        java.security.SecureRandom().nextBytes(bytes)
+        return android.util.Base64.encodeToString(
+            bytes,
+            android.util.Base64.NO_WRAP or android.util.Base64.URL_SAFE
+        )
+    }
+
     // ------------------------------------------------------------------ EXPLORE
 
     private fun showExplorePage() {
@@ -191,6 +329,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.explorepage)
         setupExplorePageListeners()
         setupBottomNavListeners()
+        persistNavigationState()
     }
 
     private fun setupExplorePageListeners() {
@@ -257,6 +396,7 @@ class MainActivity : AppCompatActivity() {
 
         load(false)
         refreshButton?.setOnClickListener { load(true) }
+        persistNavigationState()
     }
 
     fun showMyEvents() {
@@ -302,6 +442,8 @@ class MainActivity : AppCompatActivity() {
             tabPast.setTextColor(resources.getColor(R.color.white, null))
             recyclerView.adapter = myEventsAdapter(emptyList()) {}
         }
+
+        persistNavigationState()
     }
 
     private fun setupBottomNavListeners() {
@@ -367,6 +509,8 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) { e.printStackTrace() }
             }
         }
+
+        persistNavigationState()
     }
 
     // ------------------------------------------------------------------ HOME
@@ -401,6 +545,7 @@ class MainActivity : AppCompatActivity() {
 
         load(false)
         homeRefreshButton?.setOnClickListener { load(true) }
+        persistNavigationState()
     }
 
     // ------------------------------------------------------------------ PROFILE
@@ -423,8 +568,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.sectionSettings).setOnClickListener { showSettingsPage() }
         findViewById<View>(R.id.logout).setOnClickListener {
             OfflineDatabaseHelper.get().setLoggedIn(false)
+            SSODataStore().clearAllSessions()
             showLoginPage()
         }
+
+        persistNavigationState()
     }
 
     // ------------------------------------------------------------------ SETTINGS
@@ -452,6 +600,8 @@ class MainActivity : AppCompatActivity() {
 
         updateCurrentLanguageLabel()
         findViewById<View>(R.id.itemLanguage).setOnClickListener { showLanguagePickerDialog() }
+
+        persistNavigationState()
     }
 
     private fun getCurrentLanguageCode(): String {
@@ -519,6 +669,8 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.toast_profile_updated), Toast.LENGTH_SHORT).show()
             showSettingsPage()
         }
+
+        persistNavigationState()
     }
 
     fun showChangePasswordPage() {
@@ -537,11 +689,13 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_passwords_dont_match), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Calls DB update (hashes the password)
+            // Calls DB update (hashes the password and flips authProvider to LOCAL)
             user.updatePassword(np)
             Toast.makeText(this, getString(R.string.toast_password_updated), Toast.LENGTH_SHORT).show()
             showSettingsPage()
         }
+
+        persistNavigationState()
     }
 
     fun showChangeEmailPage() {
@@ -564,6 +718,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_enter_valid_email), Toast.LENGTH_SHORT).show()
             }
         }
+
+        persistNavigationState()
     }
 
     // ------------------------------------------------------------------ RECENTLY VIEWED
@@ -579,6 +735,8 @@ class MainActivity : AppCompatActivity() {
         val list = RecentlyViewedManager(this).getViewedEvents()
         recyclerView.adapter = eventAdapter(list) { showEventDetails(it) }
         findViewById<View>(R.id.recentlyViewedBack).setOnClickListener { showProfilePage() }
+
+        persistNavigationState()
     }
 
     // ------------------------------------------------------------------ HELPERS

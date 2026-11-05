@@ -33,12 +33,39 @@ class user {
         OfflineDatabaseHelper.get().saveUserAccount(row)
     }
 
-    fun updateUserDetails(firstname: String, lastname: String, email: String, phonenumber: String, password: String) {
+    /**
+     * Local sign-up / update. Sets authProvider = "LOCAL".
+     * Password is plaintext; it is hashed with BCrypt before storage.
+     */
+    fun updateUserDetails(
+        firstname: String,
+        lastname: String,
+        email: String,
+        phonenumber: String,
+        password: String
+    ) {
+        updateUserDetails(firstname, lastname, email, phonenumber, password, "LOCAL")
+    }
+
+    /**
+     * Overload that lets callers specify the auth provider.
+     * Google SSO passes authProvider = "GOOGLE"; the password field still
+     * receives a hash (of a random throwaway) so the schema is satisfied,
+     * but verifyUser() refuses to match because authProvider != "LOCAL".
+     */
+    fun updateUserDetails(
+        firstname: String,
+        lastname: String,
+        email: String,
+        phonenumber: String,
+        password: String,
+        authProvider: String
+    ) {
         this.Firstname = firstname
         this.LastName = lastname
         this.email = email
         this.PhoneNumber = phonenumber
-        this.authProvider = "LOCAL"
+        this.authProvider = authProvider
 
         // Hash the password before storing it
         this.password = PasswordUtils.hashPassword(password)
@@ -48,6 +75,8 @@ class user {
 
     fun updatePassword(newPassword: String) {
         this.password = PasswordUtils.hashPassword(newPassword)
+        // Setting a password means the user can now log in with a password.
+        this.authProvider = "LOCAL"
         saveToDb()
     }
 
