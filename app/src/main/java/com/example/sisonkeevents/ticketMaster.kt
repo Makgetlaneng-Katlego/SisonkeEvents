@@ -21,34 +21,26 @@ class ticketMaster {
             val root = JSONObject(jsonString)
             val embedded = root.optJSONObject("_embedded") ?: return emptyList()
             val eventsArray = embedded.optJSONArray("events") ?: return emptyList()
-
             for (i in 0 until eventsArray.length()) {
                 val eventObj = eventsArray.getJSONObject(i)
                 val id = eventObj.optString("id")
                 val name = eventObj.optString("name")
-                
                 val dates = eventObj.optJSONObject("dates")
                 val start = dates?.optJSONObject("start")
                 val localDate = start?.optString("localDate") ?: ""
                 val localTime = start?.optString("localTime") ?: "19:00"
-                
                 val info = if (eventObj.has("info") && !eventObj.optString("info").isNullOrEmpty()) eventObj.getString("info") else "No description available."
-                
                 val classifications = eventObj.optJSONArray("classifications")
                 val classification = classifications?.optJSONObject(0)
                 val segment = classification?.optJSONObject("segment")
                 val segmentName = segment?.optString("name") ?: "General"
-                
                 val ticketUrl = eventObj.optString("url") ?: ""
-                
                 val embeddedVenues = eventObj.optJSONObject("_embedded")
                 val venues = embeddedVenues?.optJSONArray("venues")
                 val venue = venues?.optJSONObject(0)
                 val city = venue?.optJSONObject("city")?.optString("name") ?: ""
-                
                 val images = eventObj.optJSONArray("images")
                 val imageUrl = images?.optJSONObject(0)?.optString("url")
-
                 events.add(event(
                     id = id,
                     name = name,
@@ -104,10 +96,8 @@ class ticketMaster {
             else -> today.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY))
         }
         val sunday = friday.plusDays(2)
-
         val startDateTime = "${friday}T17:00:00Z"
         val endDateTime = "${sunday}T23:59:59Z"
-
         val urlString = "${apiUrl}events.json?countryCode=$countryCode&startDateTime=$startDateTime&endDateTime=$endDateTime&apikey=$apiKey"
         val events = mutableListOf<event>()
         try {
@@ -123,39 +113,30 @@ class ticketMaster {
                     response.append(line)
                 }
                 reader.close()
-                
                 val jsonString = response.toString()
                 val root = JSONObject(jsonString)
                 val embedded = root.optJSONObject("_embedded") ?: return emptyList()
                 val eventsArray = embedded.optJSONArray("events") ?: return emptyList()
-
                 for (i in 0 until eventsArray.length()) {
                     val eventObj = eventsArray.getJSONObject(i)
                     val id = eventObj.optString("id")
                     val name = eventObj.optString("name")
-                    
                     val dates = eventObj.optJSONObject("dates")
                     val start = dates?.optJSONObject("start")
                     val localDate = start?.optString("localDate") ?: ""
                     val localTime = start?.optString("localTime") ?: "19:00"
-                    
                     val info = if (eventObj.has("info") && !eventObj.optString("info").isNullOrEmpty()) eventObj.getString("info") else "No description available."
-                    
                     val classifications = eventObj.optJSONArray("classifications")
                     val classification = classifications?.optJSONObject(0)
                     val segment = classification?.optJSONObject("segment")
                     val segmentName = segment?.optString("name") ?: "General"
-                    
                     val ticketUrl = eventObj.optString("url") ?: ""
-                    
                     val embeddedVenues = eventObj.optJSONObject("_embedded")
                     val venues = embeddedVenues?.optJSONArray("venues")
                     val venue = venues?.optJSONObject(0)
                     val city = venue?.optJSONObject("city")?.optString("name") ?: ""
-                    
                     val images = eventObj.optJSONArray("images")
                     val imageUrl = images?.optJSONObject(0)?.optString("url")
-
                     events.add(event(
                         id = id,
                         name = name,

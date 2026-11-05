@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="dialog_choose_language">Choose language</string>
     <string name="btn_cancel">Cancel</string>
-
-
     <string name="language_english" translatable="false">English</string>
     <string name="language_sepedi" translatable="false">Sepedi</string>
     <string name="language_tshivenda" translatable="false">Tshivenda</string>
@@ -20,8 +17,6 @@
     <string name="nav_my_events">My Events</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_profile">Profile</string>
-
-
     <string name="cd_home">Home</string>
     <string name="cd_explore">Explore</string>
     <string name="cd_my_events">My Events</string>
@@ -34,12 +29,9 @@
     <string name="cd_location">Location</string>
     <string name="cd_event_icon">Event icon</string>
     <string name="cd_event_image">Event image</string>
-
-
     <string name="title_welcome_back">Welcome back</string>
     <string name="subtitle_login">Login to keep track of your events</string>
     <string name="label_email">Email</string>
-
     <string name="label_password">Password</string>
     <string name="hint_password_masked" translatable="false">••••••••</string>
     <string name="btn_login">Login</string>
@@ -54,19 +46,14 @@
     <string name="hint_last_name_example">Doe</string>
     <string name="label_phone_number">Phone Number</string>
     <string name="hint_phone_number">Phone Number</string>
-
     <string name="label_confirm_password">Confirm Password</string>
     <string name="text_have_account">"Already have an account? "</string>
     <string name="link_login">Login</string>
-
-
     <string name="greeting_morning">Good Morning,</string>
     <string name="greeting_welcome_format">Welcome, %s</string>
     <string name="hint_search_events">Search Events</string>
     <string name="header_weekend">What\'s happening this weekend</string>
     <string name="header_nearby">Nearby Events</string>
-
-
     <string name="title_discover">Discover</string>
     <string name="category_music">Music</string>
     <string name="category_comedy">Comedy</string>
@@ -76,8 +63,6 @@
     <string name="category_family">Family Events</string>
     <string name="category_community">Community Events</string>
     <string name="category_festival">Festival Events</string>
-
-
     <string name="title_events">Events</string>
     <string name="header_about_event">About this event</string>
     <string name="header_good_to_know">Good to know</string>
@@ -85,15 +70,10 @@
     <string name="format_parking">• Parking: %s</string>
     <string name="btn_im_interested">I\'m Interested</string>
     <string name="btn_get_tickets">Get Tickets</string>
-
-
-
     <string name="title_my_events">My Events</string>
     <string name="tab_interested">Interested</string>
     <string name="tab_rsvpd">RSVP\'d</string>
     <string name="tab_past">Past</string>
-
-
     <string name="title_profile">Profile</string>
     <string name="menu_saved_events">Saved Events</string>
     <string name="menu_recently_viewed">Recently Viewed</string>
@@ -101,12 +81,8 @@
     <string name="menu_logout">Log out</string>
     <string name="fallback_user_profile">User Profile</string>
     <string name="fallback_no_email" translatable="false">no-email@example.com</string>
-
-
     <string name="title_recently_viewed">Recently Viewed</string>
     <string name="chip_recent">Recent</string>
-
-
     <string name="title_settings">Settings</string>
     <string name="section_account">ACCOUNT</string>
     <string name="menu_profile">Profile</string>
@@ -114,30 +90,22 @@
     <string name="menu_email">Email</string>
     <string name="section_appearance">APPEARANCE</string>
     <string name="menu_dark_mode">Dark Mode</string>
-
-
     <string name="title_change_email">Change Email</string>
     <string name="desc_change_email">Enter your new email address below to update your account access configurations.</string>
     <string name="label_new_email">New Email Address</string>
     <string name="btn_update_email">Update Email</string>
-
     <string name="title_change_password">Change Password</string>
     <string name="desc_change_password">Enter your new password below to update your security credentials.</string>
     <string name="label_new_password">New Password</string>
     <string name="label_confirm_new_password">Confirm New Password</string>
     <string name="btn_update_password">Update Password</string>
-
     <string name="title_change_profile">Change Profile Info</string>
     <string name="desc_change_profile">Update your primary account details below.</string>
     <string name="btn_update_profile">Update Profile Info</string>
-
-
     <plurals name="interested_count">
         <item quantity="one">%d interested</item>
         <item quantity="other">%d interested</item>
     </plurals>
-
-
     <string name="toast_invalid_credentials">Invalid credentials</string>
     <string name="toast_fill_all_fields">Please fill in all fields</string>
     <string name="toast_passwords_dont_match">Passwords do not match</string>

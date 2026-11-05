@@ -35,20 +35,13 @@ import java.net.URL
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-
     private val categories = segmentIDs()
-
-    // FIXED: Made lazy to prevent initialization crash on launch
     val user: user by lazy { user() }
-
     private val repository: EventRepository by lazy {
         (application as? SisonkeApp)?.repository
             ?: EventRepository(applicationContext, com.example.sisonkeevents.data.TicketMasterEventApi())
     }
-
-    // Google SSO manager (initialized in onCreate)
     private lateinit var googleSignInManager: GoogleSignInManager
-
     private var currentCategoryName: String? = null
     private var currentCategoryId: String? = null
     private var currentPage: String = "login"
@@ -56,10 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        // Initialize Google SSO manager
         googleSignInManager = GoogleSignInManager(this)
-
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 when (currentPage) {
@@ -78,8 +68,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        // Restore from DB if logged in; otherwise show login.
         val db = OfflineDatabaseHelper.get()
         if (db.isLoggedIn()) {
             val state = db.loadSessionState()
@@ -136,17 +124,12 @@ class MainActivity : AppCompatActivity() {
             else -> showHomePage()
         }
     }
-
-    // ------------------------------------------------------------------ LOGIN
-
     fun showLoginPage() {
         currentPage = "login"
         setContentView(R.layout.login_page)
-
         if (user.email == null) {
             user.updateUserDetails("Pfano", "Dzivhani", "example@email.com", "0820000000", "******")
         }
-
         findViewById<Button>(R.id.login_button).setOnClickListener {
             val inputEmail = findViewById<EditText>(R.id.email).text.toString().trim()
             val inputPassword = findViewById<EditText>(R.id.password).text.toString().trim()
@@ -157,10 +140,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_invalid_credentials), Toast.LENGTH_SHORT).show()
             }
         }
-
         findViewById<Button>(R.id.btnCreateAcc).setOnClickListener { showCreateAccountPage() }
-
-        // Google Sign-In button (safe call: no-op if layout doesn't define it)
         findViewById<Button>(R.id.btnGoogleSignIn)?.setOnClickListener {
             startGoogleSignIn()
         }
@@ -175,7 +155,6 @@ class MainActivity : AppCompatActivity() {
         val etPhoneNumber = findViewById<EditText>(R.id.etPhoneNumber)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
-
         findViewById<Button>(R.id.btnCreateAccountSubmit).setOnClickListener {
             val fn = etFirstName.text.toString().trim()
             val ln = etLastName.text.toString().trim()
@@ -183,7 +162,6 @@ class MainActivity : AppCompatActivity() {
             val ph = etPhoneNumber.text.toString().trim()
             val pw = etPassword.text.toString().trim()
             val cp = etConfirmPassword.text.toString().trim()
-
             if (fn.isEmpty() || ln.isEmpty() || em.isEmpty() || ph.isEmpty() || pw.isEmpty() || cp.isEmpty()) {
                 Toast.makeText(this, getString(R.string.toast_fill_all_fields), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -192,15 +170,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_passwords_dont_match), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Calls the new BCrypt backed function
             user.updateUserDetails(fn, ln, em, ph, pw)
             OfflineDatabaseHelper.get().setLoggedIn(true)
             showExplorePage()
         }
     }
-
-    // ------------------------------------------------------------------ GOOGLE SSO
-
     private fun startGoogleSignIn() {
         lifecycleScope.launch {
             when (val result = googleSignInManager.signIn()) {
@@ -221,21 +195,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /**
-     * Completes a Google sign-in:
-     *
-     *   1. Look up an existing link by Google `sub` (stable across email
-     *      changes). Fall back to email match for the "local signup, then
-     *      Google with same email" case.
-     *   2. If linked → refresh profile fields, leave authProvider alone.
-     *      If new    → create the single user_account row with
-     *                  authProvider = "GOOGLE" and a throwaway password.
-     *   3. Upsert the (provider, sub) identity row.
-     *   4. Only on full success: set the logged-in flag and navigate home.
-     *
-     * All SQLite work happens on Dispatchers.IO.
-     */
     private fun onGoogleSignInSuccess(
         email: String?,
         displayName: String?,
@@ -249,25 +208,16 @@ class MainActivity : AppCompatActivity() {
         val parts = safeName.split(" ", limit = 2)
         val firstName = parts.getOrNull(0) ?: ""
         val lastName = parts.getOrNull(1) ?: ""
-
         lifecycleScope.launch {
             val dataStore = SSODataStore()
-
             val localUserId: Long? = withContext(Dispatchers.IO) {
-                // Prefer the stable (provider, sub) link. Fall back to email
-                // so an existing local account with the same email is reused.
                 val linkedId = dataStore.findLinkedUserAccountId(subject)
                     ?: dataStore.findUserAccountIdByEmail(emailSafe)
-
                 if (linkedId != null) {
-                    // Returning user — sync profile fields, keep authProvider
                     user.updateEmail(emailSafe)
                     user.updateProfileDetails(firstName, lastName, user.PhoneNumber ?: "")
                     linkedId
                 } else {
-                    // New Google user — random throwaway password; user can
-                    // replace it later via Settings → Change password (which
-                    // flips authProvider back to "LOCAL").
                     user.updateUserDetails(
                         firstName,
                         lastName,
@@ -279,7 +229,6 @@ class MainActivity : AppCompatActivity() {
                     dataStore.findUserAccountIdByEmail(emailSafe)
                 }
             }
-
             if (localUserId == null) {
                 Toast.makeText(
                     this@MainActivity,
@@ -288,7 +237,6 @@ class MainActivity : AppCompatActivity() {
                 ).show()
                 return@launch
             }
-
             val linked = withContext(Dispatchers.IO) {
                 dataStore.linkOrUpdateIdentity(
                     subject = subject,
@@ -305,10 +253,8 @@ class MainActivity : AppCompatActivity() {
                 ).show()
                 return@launch
             }
-
             OfflineDatabaseHelper.get().setLoggedIn(true)
             Toast.makeText(this@MainActivity, "Welcome, $safeName!", Toast.LENGTH_SHORT).show()
-            // showHomePage() persists navigation state itself.
             showHomePage()
         }
     }
@@ -321,9 +267,6 @@ class MainActivity : AppCompatActivity() {
             android.util.Base64.NO_WRAP or android.util.Base64.URL_SAFE
         )
     }
-
-    // ------------------------------------------------------------------ EXPLORE
-
     private fun showExplorePage() {
         currentPage = "explore"
         setContentView(R.layout.explorepage)
@@ -358,26 +301,18 @@ class MainActivity : AppCompatActivity() {
             showEvents(getString(R.string.category_festival), categories.festivalID)
         }
     }
-
-    // ------------------------------------------------------------------ EVENTS
-
     private fun showEvents(categoryName: String, categoryId: String) {
         currentPage = "events"
         currentCategoryName = categoryName
         currentCategoryId = categoryId
-
         setContentView(R.layout.show_events)
         setupBottomNavListeners()
-
         findViewById<TextView>(R.id.categoryTitle).text = categoryName
         findViewById<ImageView>(R.id.backButton).setOnClickListener { showExplorePage() }
-
         val recyclerView = findViewById<RecyclerView>(R.id.eventsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         val lastUpdatedText = findOptionalView("lastUpdatedText") as? TextView
         val refreshButton = findOptionalView("refreshButton")
-
         fun load(forceRefresh: Boolean) {
             lifecycleScope.launch {
                 val result = repository.getEventsForCategory(categoryId, forceRefresh)
@@ -403,18 +338,14 @@ class MainActivity : AppCompatActivity() {
         currentPage = "my_events"
         setContentView(R.layout.my_events)
         setupBottomNavListeners()
-
         val myEventsManager = MyEventsManager(this)
         val recyclerView = findViewById<RecyclerView>(R.id.myEventsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         val interestedEvents = myEventsManager.getInterestedEvents()
         recyclerView.adapter = myEventsAdapter(interestedEvents) { showEventDetails(it) }
-
         val tabInterested = findViewById<TextView>(R.id.tabInterested)
         val tabRsvpd = findViewById<TextView>(R.id.tabRsvpd)
         val tabPast = findViewById<TextView>(R.id.tabPast)
-
         tabInterested.setOnClickListener {
             tabInterested.setBackgroundResource(R.drawable.bg_chip_selected)
             tabInterested.setTextColor(resources.getColor(R.color.white, null))
@@ -445,7 +376,6 @@ class MainActivity : AppCompatActivity() {
 
         persistNavigationState()
     }
-
     private fun setupBottomNavListeners() {
         findViewById<View>(R.id.navHome)?.setOnClickListener { showHomePage() }
         findViewById<View>(R.id.navExplore)?.setOnClickListener { showExplorePage() }
@@ -455,15 +385,10 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.navProfile)?.setOnClickListener { showProfilePage() }
     }
-
-    // ------------------------------------------------------------------ DETAILS
-
     fun showEventDetails(event: event) {
         currentPage = "details"
         setContentView(R.layout.event_details)
-
         RecentlyViewedManager(this).saveViewedEvent(event)
-
         findViewById<TextView>(R.id.detailCategory).text = event.category
         findViewById<TextView>(R.id.detailTitle).text = event.name
         findViewById<TextView>(R.id.detailInterestedCount).text =
@@ -474,12 +399,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.detailDescription).text = event.description
         findViewById<TextView>(R.id.detailAge).text = getString(R.string.format_age, event.age)
         findViewById<TextView>(R.id.detailParking).text = getString(R.string.format_parking, event.parking)
-
         findViewById<ImageView>(R.id.detailBackButton).setOnClickListener {
             val n = currentCategoryName; val i = currentCategoryId
             if (n != null && i != null) showEvents(n, i) else showHomePage()
         }
-
         findViewById<View>(R.id.btnGetTickets).setOnClickListener {
             if (!event.ticketUrl.isNullOrEmpty()) {
                 try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(event.ticketUrl))) }
@@ -512,27 +435,19 @@ class MainActivity : AppCompatActivity() {
 
         persistNavigationState()
     }
-
-    // ------------------------------------------------------------------ HOME
-
     fun showHomePage() {
         currentPage = "home"
         currentCategoryName = null
         currentCategoryId = null
-
         setContentView(R.layout.homepage)
         findViewById<TextView>(R.id.homepageName).text = user.Firstname ?: ""
         setupBottomNavListeners()
-
         val weekendRecyclerView = findViewById<RecyclerView>(R.id.weekendRecyclerView)
         weekendRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
         val nearbyRecyclerView = findViewById<RecyclerView>(R.id.nearbyRecyclerView)
         nearbyRecyclerView.layoutManager = LinearLayoutManager(this)
-
         val homeRefreshButton = findOptionalView("homeRefreshButton")
-
         fun load(forceRefresh: Boolean) {
             lifecycleScope.launch {
                 val result: EventsResult = repository.getWeekendEvents("ZA", forceRefresh)
@@ -542,27 +457,20 @@ class MainActivity : AppCompatActivity() {
                     eventAdapter(result.events) { showEventDetails(it) }
             }
         }
-
         load(false)
         homeRefreshButton?.setOnClickListener { load(true) }
         persistNavigationState()
     }
-
-    // ------------------------------------------------------------------ PROFILE
-
     fun showProfilePage() {
         currentPage = "profile"
         setContentView(R.layout.profilepage)
-
         val displayName = if (!user.Firstname.isNullOrEmpty() && !user.LastName.isNullOrEmpty()) {
             "${user.Firstname} ${user.LastName}"
         } else if (!user.Firstname.isNullOrEmpty()) user.Firstname
         else getString(R.string.fallback_user_profile)
-
         findViewById<TextView>(R.id.Username).text = displayName
         findViewById<TextView>(R.id.email).text = user.email ?: getString(R.string.fallback_no_email)
         setupBottomNavListeners()
-
         findViewById<View>(R.id.sectionSavedEvents).setOnClickListener { showMyEvents() }
         findViewById<View>(R.id.sectionRecentlyViewed).setOnClickListener { showRecentlyViewed() }
         findViewById<View>(R.id.sectionSettings).setOnClickListener { showSettingsPage() }
@@ -574,9 +482,6 @@ class MainActivity : AppCompatActivity() {
 
         persistNavigationState()
     }
-
-    // ------------------------------------------------------------------ SETTINGS
-
     fun showSettingsPage() {
         currentPage = "settings"
         setContentView(R.layout.settingspage)
@@ -593,14 +498,11 @@ class MainActivity : AppCompatActivity() {
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
         }
-
         findViewById<View>(R.id.itemEmail).setOnClickListener { showChangeEmailPage() }
         findViewById<View>(R.id.itemPassword).setOnClickListener { showChangePasswordPage() }
         findViewById<View>(R.id.itemProfile).setOnClickListener { showChangeProfileDetailsPage() }
-
         updateCurrentLanguageLabel()
         findViewById<View>(R.id.itemLanguage).setOnClickListener { showLanguagePickerDialog() }
-
         persistNavigationState()
     }
 
@@ -641,20 +543,15 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton(getString(R.string.btn_cancel), null)
             .show()
     }
-
-    // ------------------------------------------------------------------ CHANGE DETAILS
-
     fun showChangeProfileDetailsPage() {
         currentPage = "change_profile"
         setContentView(R.layout.change_profile_details_page)
-
         val etNewFirstName = findViewById<EditText>(R.id.etNewFirstName)
         val etNewLastName = findViewById<EditText>(R.id.etNewLastName)
         val etNewPhoneNumber = findViewById<EditText>(R.id.etNewPhoneNumber)
         etNewFirstName.setText(user.Firstname)
         etNewLastName.setText(user.LastName)
         etNewPhoneNumber.setText(user.PhoneNumber)
-
         findViewById<View>(R.id.btnChangeProfileBack).setOnClickListener { showSettingsPage() }
         findViewById<Button>(R.id.btnUpdateProfileSubmit).setOnClickListener {
             val fn = etNewFirstName.text.toString().trim()
@@ -664,7 +561,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_fill_all_details), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Calls DB update
             user.updateProfileDetails(fn, ln, ph)
             Toast.makeText(this, getString(R.string.toast_profile_updated), Toast.LENGTH_SHORT).show()
             showSettingsPage()
@@ -676,7 +572,6 @@ class MainActivity : AppCompatActivity() {
     fun showChangePasswordPage() {
         currentPage = "change_password"
         setContentView(R.layout.change_password_page)
-
         findViewById<View>(R.id.btnChangePasswordBack).setOnClickListener { showSettingsPage() }
         findViewById<Button>(R.id.btnUpdatePasswordSubmit).setOnClickListener {
             val np = findViewById<EditText>(R.id.etNewPasswordInput).text.toString().trim()
@@ -685,32 +580,31 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.toast_fill_password_fields), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if (np.length < 6) {
+                Toast.makeText(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (!user.verifyPasswords(np, cp)) {
                 Toast.makeText(this, getString(R.string.toast_passwords_dont_match), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Calls DB update (hashes the password and flips authProvider to LOCAL)
             user.updatePassword(np)
             Toast.makeText(this, getString(R.string.toast_password_updated), Toast.LENGTH_SHORT).show()
             showSettingsPage()
         }
-
         persistNavigationState()
     }
-
     fun showChangeEmailPage() {
         currentPage = "change_email"
         setContentView(R.layout.change_email_page)
-
         val etNewEmailInput = findViewById<EditText>(R.id.etNewEmailInput)
         etNewEmailInput.setText(user.email)
         etNewEmailInput.setSelection(etNewEmailInput.text?.length ?: 0)
-
         findViewById<View>(R.id.btnChangeEmailBack).setOnClickListener { showSettingsPage() }
         findViewById<Button>(R.id.btnUpdateEmailSubmit).setOnClickListener {
             val updated = etNewEmailInput.text.toString().trim()
-            if (updated.isNotEmpty()) {
-                // Calls DB update
+            if (updated.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(updated).matches()) {
+
                 user.updateEmail(updated)
                 Toast.makeText(this, getString(R.string.toast_email_updated), Toast.LENGTH_SHORT).show()
                 showSettingsPage()
@@ -721,31 +615,21 @@ class MainActivity : AppCompatActivity() {
 
         persistNavigationState()
     }
-
-    // ------------------------------------------------------------------ RECENTLY VIEWED
-
     fun showRecentlyViewed() {
         currentPage = "recently_viewed"
         setContentView(R.layout.recently_viewed)
         setupBottomNavListeners()
-
         val recyclerView = findViewById<RecyclerView>(R.id.recentEventsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
         val list = RecentlyViewedManager(this).getViewedEvents()
         recyclerView.adapter = eventAdapter(list) { showEventDetails(it) }
         findViewById<View>(R.id.recentlyViewedBack).setOnClickListener { showProfilePage() }
-
         persistNavigationState()
     }
-
-    // ------------------------------------------------------------------ HELPERS
-
     private fun findOptionalView(resIdName: String): View? {
         val id = resources.getIdentifier(resIdName, "id", packageName)
         return if (id != 0) findViewById(id) else null
     }
-
     private fun formatRelativeTime(ts: Long?): String {
         if (ts == null) return ""
         val mins = ((System.currentTimeMillis() - ts) / 60_000L).coerceAtLeast(0)

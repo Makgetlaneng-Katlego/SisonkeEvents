@@ -3,30 +3,12 @@ package com.example.sisonkeevents.sso
 import android.content.ContentValues
 import com.example.sisonkeevents.data.OfflineDatabaseHelper
 
-/**
- * Reads and writes SSO identity links against the app's SQLite database.
- *
- * Note: `user_account` is a SINGLE-ROW table (CHECK id = 1). Every Google
- * identity that signs in on this device is linked to `local_user_id = 1`.
- *
- * The schema (from OfflineDatabaseHelper v4):
- *   user_identities(
- *     id, local_user_id, provider, provider_user_id,
- *     email, display_name, created_at
- *   )
- *
- * All methods are safe to call from a background thread (they perform
- * blocking SQLite I/O). Reads return null on failure rather than throwing.
- */
+
 class SSODataStore {
 
     private val db
         get() = OfflineDatabaseHelper.get().writableDatabase
 
-    /**
-     * Returns `user_account.id` (always 1) if the stored user's email
-     * matches [email] case-insensitively, otherwise null.
-     */
     fun findUserAccountIdByEmail(email: String): Long? {
         return try {
             db.query(
@@ -43,14 +25,6 @@ class SSODataStore {
             null
         }
     }
-
-    /**
-     * Returns the linked `local_user_id` for ([provider], [subject]), or null
-     * if this Google account has never been linked on this device.
-     *
-     * The [subject] is the Google `sub` claim — stable across email changes,
-     * unlike the email address.
-     */
     fun findLinkedUserAccountId(
         subject: String,
         provider: String = SSOConfig.PROVIDER
@@ -71,15 +45,7 @@ class SSODataStore {
         }
     }
 
-    /**
-     * Inserts a new ([provider], [subject]) → [localUserId] mapping, or updates
-     * the cached profile fields if it already exists. Safe to call on every
-     * sign-in.
-     *
-     * @return true if the row was written successfully, false on any DB error.
-     *         Callers should treat false as a hard failure (do not mark the
-     *         user logged in without an identity link).
-     */
+
     fun linkOrUpdateIdentity(
         subject: String,
         email: String?,
@@ -118,14 +84,6 @@ class SSODataStore {
             false
         }
     }
-
-    /**
-     * Deletes all SSO identity links and any session rows.
-     * Called from the logout button in MainActivity.
-     *
-     * The Google account itself stays cached on the device — the next
-     * sign-in is still one tap. Only the app-side link is removed.
-     */
     fun clearAllSessions() {
         try {
             db.delete("user_identities", null, null)

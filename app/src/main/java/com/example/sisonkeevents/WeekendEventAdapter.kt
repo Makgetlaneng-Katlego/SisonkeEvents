@@ -18,18 +18,15 @@ class WeekendEventAdapter(
     private val scope: CoroutineScope,
     private val onItemClick: (event) -> Unit
 ) : RecyclerView.Adapter<WeekendEventAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val image: ImageView = view.findViewById(R.id.eventImage)
         val title: TextView = view.findViewById(R.id.eventTitle)
         val date: TextView = view.findViewById(R.id.eventDate)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_weekend_event, parent, false)
         return ViewHolder(view)
     }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val event = events[position]
         holder.title.text = event.name
